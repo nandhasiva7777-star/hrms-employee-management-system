@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% block content %}
+<h2>Admin Dashboard <span class="badge bg-primary">Power BI Style</span></h2>
+<div class="row g-3 my-3"><div class="col-md-3"><div class="card text-bg-primary"><div class="card-body"><h6>Total Headcount</h6><h2>{{total}}</h2></div></div></div><div class="col-md-3"><div class="card text-bg-success"><div class="card-body"><h6>Active Employees</h6><h2>{{active}}</h2></div></div></div><div class="col-md-3"><div class="card text-bg-warning"><div class="card-body"><h6>Today Attendance %</h6><h2>{{att_pct}}%</h2><small>Present: {{present}}</small></div></div></div><div class="col-md-3"><div class="card text-bg-danger"><div class="card-body"><h6>Pending Leaves</h6><h2>{{pending}}</h2></div></div></div></div>
+<div class="row g-3"><div class="col-md-6"><div class="card"><div class="card-body"><h5>Leave Trends</h5><canvas id="leaveChart"></canvas></div></div></div><div class="col-md-6"><div class="card"><div class="card-body"><h5>Department Headcount</h5><canvas id="deptChart"></canvas></div></div></div></div>
+{% if my_emp %}<div class="card mt-3"><div class="card-body"><h5>My Recent Attendance & Leaves</h5><p>Welcome, <b>{{my_emp.full_name}}</b> - {{my_emp.designation}}</p><ul>{% for a in my_att %}<li>{{a.date}} - {{a.status}}</li>{% empty %}<li>No attendance yet. Attendance page la Check-in pannunga.</li>{% endfor %}</ul></div></div>{% endif %}
+{% endblock %}{% block scripts %}<script>
+const ld={{leave_data|safe}}; new Chart(document.getElementById('leaveChart'),{type:'bar',data:{labels:ld.map(x=>x.leave_type),datasets:[{label:'Leaves',data:ld.map(x=>x.c),backgroundColor:'#0d6efd'}]}});
+const dd={{dept_data|safe}}; new Chart(document.getElementById('deptChart'),{type:'doughnut',data:{labels:dd.map(x=>x.department__name||'No Dept'),datasets:[{data:dd.map(x=>x.c),backgroundColor:['#0d6efd','#198754','#ffc107','#dc3545','#6f42c1']}]}});
+</script>{% endblock %}
